@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <link rel="icon" type="image/x-icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0e17;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .loader {
+            border: 8px solid #1a1f2c;
+            border-top: 8px solid #5644ff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        p {
+            font-size: 18px;
+        }
+        
+        a {
+            color: #5644ff;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loader"></div>
+        <p id="redirect-text">Redirecting...</p>
+        <p>If you are not redirected automatically, <a id="redirect-link" href="#">click here</a>.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Path to the URL file
+            const urlFile = 'url.txt';
+            
+            // Elements
+            const redirectText = document.getElementById('redirect-text');
+            const redirectLink = document.getElementById('redirect-link');
+            
+            // Fetch the URL from url.txt
+            fetch(urlFile)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load URL file');
+                    }
+                    return response.text();
+                })
+                .then(url => {
+                    // Check if the URL is valid
+                    url = url.trim();
+                    if (url) {
+                        // Update the link
+                        redirectLink.href = url;
+                        
+                        // Redirect to the URL
+                        redirectText.textContent = 'Redirecting to destination...';
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 1500);
+                    } else {
+                        redirectText.textContent = 'Error: URL file is empty';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching URL:', error);
+                    redirectText.textContent = 'Error loading redirect destination';
+                });
+        });
+    </script>
+</body>
+</html>
